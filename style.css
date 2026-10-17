@@ -1,0 +1,157 @@
+:root {
+  --ink: #2b2b2b;
+  --soft: rgba(0, 0, 0, 0.45);
+  --faint: #888888;
+  --shell: #8a5a2b;
+  --structure: #2f7d4f;
+  --mono: "Courier New", monospace;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #ffffff;
+  font-family: var(--mono);
+}
+
+#render-stage { position: fixed; inset: 0; background: #ffffff; overflow: hidden; }
+#ruler { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+#ruler text { font-family: var(--mono); font-size: 9px; fill: #888; }
+#ruler .tick { stroke: #bbb; stroke-width: 1; }
+#ruler .axis { stroke: #999; stroke-width: 1; }
+#ruler .drop { stroke: #c9c9c9; stroke-width: 1; stroke-dasharray: 2 3; }
+#ruler .dot { fill: #2b2b2b; cursor: pointer; pointer-events: all; }
+#ruler .dot.on { fill: var(--shell); }
+#ruler .ltr { font-size: 9px; font-weight: 700; fill: #2b2b2b; pointer-events: none; }
+#ruler .frame { fill: none; stroke: #d5d5d5; stroke-width: 1; }
+#ruler .reg { stroke: #999; stroke-width: 1; }
+
+#panel { position: absolute; inset: 0; }
+.og, .xg { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+body.xray .og, body:not(.xray) .xg { display: none; }
+.obj { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 0 0; mix-blend-mode: multiply; }
+.part { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 0 0; }
+.part img {
+  position: absolute;
+  max-width: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+body:not(.xray) .og .part img { filter: grayscale(1) contrast(1.12); }
+
+#focus-frame {
+  position: absolute;
+  display: none;
+  border: 1px dashed #555;
+  pointer-events: none;
+  z-index: 5000;
+}
+
+#label {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(760px, calc(100vw - 190px));
+  text-align: center;
+  z-index: 900;
+  pointer-events: none;
+  font-family: var(--mono);
+  text-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 9px #fff;
+}
+#label .l1 { font-size: 14px; color: #111; display: flex; align-items: center; justify-content: center; gap: 9px; flex-wrap: wrap; }
+#label .chip { border: 1px solid var(--shell); color: var(--shell); border-radius: 999px; padding: 1px 10px; font-size: 12px; }
+#label .yr { color: #999; font-size: 12px; }
+#label .l2 { font-size: 11px; color: #777; margin-top: 6px; }
+#label .l3 { font-size: 10.5px; color: #666; margin-top: 5px; }
+#label .l3 b { font-weight: 400; }
+#label .sh { color: var(--shell); }
+#label .st { color: var(--structure); }
+#label .l4 { font-size: 10px; color: #999; margin-top: 4px; }
+#label .hint { font-size: 11px; color: #aaa; }
+
+#loading { position: fixed; left: 24px; bottom: 22px; font-size: 10px; color: #999; z-index: 900; pointer-events: none; letter-spacing: 0.5px; }
+
+#typed {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 30px;
+  padding: 8px 22px;
+}
+#mouse-input {
+  background: transparent; border: none; color: #000; font-size: 1.1rem; outline: none;
+  width: 250px; text-align: center; font-family: var(--mono); letter-spacing: 1px;
+}
+
+#tools { position: fixed; top: 20px; right: 22px; z-index: 1300; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+#tools button {
+  display: flex; align-items: center; gap: 6px;
+  font-weight: 500; font-size: 11px; letter-spacing: 0.6px; color: #888;
+  background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(6px);
+  border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 999px; padding: 7px 13px; cursor: pointer; font-family: inherit;
+}
+#xray-toggle { padding-left: 10px !important; }
+#lang-toggle { min-width: 40px; justify-content: center; }
+html[lang="ko"] #tools button,
+html[lang="ko"] #label,
+html[lang="ko"] .panel,
+html[lang="ko"] .key-hide { font-family: "Courier New", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", monospace; }
+#tools button:hover { color: #444; }
+.xray-dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; }
+#tools button[aria-pressed="true"] { color: #eee; background: rgba(30, 30, 30, 0.85); border-color: rgba(0, 0, 0, 0.6); }
+#xray-toggle[aria-pressed="true"] .xray-dot { background: #d8d6cf; }
+
+.panel {
+  position: fixed; left: 50%; top: 108px; transform: translateX(-50%);
+  width: min(430px, 92vw); max-height: calc(100vh - 190px); overflow: auto; box-sizing: border-box;
+  display: none; z-index: 1200; background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.14); border-radius: 14px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  padding: 14px 18px 16px; font-family: var(--mono); color: #222;
+}
+.panel.wide { width: min(800px, calc(100vw - 150px)); left: calc(50% - 56px); }
+.panel.show { display: block; }
+.panel header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; letter-spacing: 0.5px; margin-bottom: 10px; color: #444; }
+.panel-close { background: none; border: none; font-size: 18px; color: #999; cursor: pointer; padding: 0 4px; }
+.panel-close:hover { color: #222; }
+.panel pre { margin: 0; font-size: 11px; line-height: 1.55; white-space: pre-wrap; }
+.panel .hint { font-size: 10px; color: #888; margin: 6px 0 0; }
+.panel .empty { font-size: 12px; color: #888; }
+.panel-actions { display: flex; gap: 8px; margin-top: 12px; }
+.panel-actions button { font-family: var(--mono); font-size: 11px; background: #fff; border: 1px solid #222; border-radius: 999px; padding: 5px 14px; cursor: pointer; }
+.panel-actions button:hover { background: #222; color: #fff; }
+.panel svg { display: block; margin-bottom: 6px; }
+.panel svg text { font-family: var(--mono); }
+.panel svg .ax { font-size: 9.5px; fill: #777; }
+.panel svg .nd { font-size: 8.5px; font-weight: 700; }
+.panel svg .ct { font-size: 11px; fill: #333; }
+.legend { font-size: 10px; color: #666; margin-bottom: 8px; }
+.legend i { display: inline-block; width: 9px; height: 9px; margin: 0 4px 0 10px; }
+.legend i:first-child { margin-left: 0; }
+
+@media (max-width: 600px) {
+  #mouse-input { width: 190px; }
+  #label { width: calc(100vw - 32px); }
+  #tools { top: auto; bottom: 74px; right: auto; left: 50%; transform: translateX(-50%); flex-direction: row; gap: 5px; }
+  #tools button { padding: 6px 9px; font-size: 10px; }
+  .panel.wide, .panel { width: calc(100vw - 24px); left: 12px; transform: none; top: 100px; }
+}
+
+@page { size: 80mm auto; margin: 4mm; }
+@media print {
+  body > *:not(#panel-receipt) { display: none !important; }
+  html, body { overflow: visible; height: auto; background: #fff; }
+  #panel-receipt { display: block !important; position: static; transform: none; width: 72mm; max-height: none; border: none; box-shadow: none; padding: 0; }
+  #panel-receipt .panel-actions, #panel-receipt header button, #panel-receipt .hint { display: none; }
+  #panel-receipt pre { font-size: 9pt; }
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Mouse Graft System</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./app.css">
+  <script src="./data.js" defer></script>
+  <script src="./app.js" defer></script>
+  <script src="./script.js" defer></script>
+</head>
+<body>
+  <nav id="tools" aria-label="Tools">
+    <button id="xray-toggle" class="tool-x" type="button" aria-pressed="false"><span class="xray-dot"></span><span data-ko="엑스레이">X-RAY</span></button>
+    <button class="tool" type="button" aria-pressed="false" data-panel="panel-receipt" data-ko="영수증">RECEIPT</button>
+    <button class="tool" type="button" aria-pressed="false" data-panel="panel-lineage" data-ko="계보">LINEAGE</button>
+    <button class="tool" type="button" aria-pressed="false" data-panel="panel-graph" data-ko="그래프">GRAPH</button>
+    <button id="lang-toggle" class="tool-lang" type="button" aria-label="한국어">KR</button>
+  </nav>
+
+  <div id="label"></div>
+
+  <div id="render-stage">
+    <svg id="ruler" aria-hidden="true"></svg>
+    <div id="panel"></div>
+    <div id="focus-frame"></div>
+    <div id="marks"></div>
+  </div>
+  <div id="loading"></div>
+
+  <div id="typed">
+    <input type="text" id="mouse-input" placeholder="TYPE A–Z" autocomplete="off" autocorrect="off"
+           autocapitalize="characters" spellcheck="false" autofocus>
+  </div>
+
+  <section id="panel-receipt" class="panel">
+    <header><span data-ko="영수증 — 입력한 모든 글자">RECEIPT — every letter typed</span><button class="panel-close" type="button" data-close="panel-receipt">×</button></header>
+    <pre id="receipt-text"></pre>
+    <div class="panel-actions">
+      <button id="receipt-print" type="button" data-ko="인쇄">PRINT</button>
+      <button id="receipt-save" type="button" data-ko="TXT 저장">SAVE TXT</button>
+    </div>
+    <p class="hint" data-ko="인쇄는 80mm 영수증 크기로 나옵니다.">PRINT uses an 80 mm receipt layout.</p>
+  </section>
+
+  <section id="panel-lineage" class="panel wide">
+    <header><span data-ko="계보도 — 연도 × 형태 계열">LINEAGE MAP — year by form family</span><button class="panel-close" type="button" data-close="panel-lineage">×</button></header>
+    <div id="lineage-body"></div>
+  </section>
+
+  <section id="panel-graph" class="panel wide">
+    <header><span data-ko="그래프 — 글자마다의 반응">GRAPH — how each letter responds</span><button class="panel-close" type="button" data-close="panel-graph">×</button></header>
+    <div id="graph-body"></div>
+  </section>
+</body>
+</html>
