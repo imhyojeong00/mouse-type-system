@@ -1,12 +1,16 @@
 const MOUSE_GEOMETRY = {"01": [82, 182, 570, 532], "02": [459, 180, 1120, 698], "03": [615, 180, 962, 741], "04": [128, 232, 398, 736], "05": [68, 195, 531, 638], "06": [246, 315, 484, 722], "07": [218, 128, 542, 717], "08": [564, 134, 914, 738], "09": [202, 98, 548, 720], "10": [196, 69, 548, 687], "11": [454, 291, 704, 714], "12": [369, 243, 742, 758], "13": [296, 54, 900, 670], "14": [414, 112, 974, 740], "15": [530, 102, 948, 734], "16": [418, 33, 915, 735], "17": [580, 129, 933, 734], "18": [518, 81, 879, 729], "19": [260, 32, 681, 738], "20": [552, 62, 946, 722], "21": [136, 106, 698, 666], "22": [234, 68, 620, 747], "23": [537, 74, 912, 735], "24": [258, 22, 680, 724], "25": [318, 6, 816, 747], "26": [640, 120, 966, 708], "27": [212, 66, 560, 710], "28": [596, 96, 957, 706], "29": [308, 9, 840, 752], "30": [462, 141, 844, 758], "31": [213, 34, 986, 718], "32": [381, 8, 768, 738], "33": [424, 96, 818, 722], "34": [348, 9, 813, 752], "35": [478, 138, 846, 738], "36": [322, 24, 814, 730], "37": [333, 27, 813, 732], "38": [384, 24, 766, 741], "39": [393, 27, 758, 740]};
 const MOUSE_HAS_CABLE = {"01": [true, true], "02": [true, true], "03": [true, true], "04": [true, true], "05": [true, true], "06": [true, true], "07": [true, true], "08": [true, true], "09": [true, true], "10": [true, true], "11": [true, true], "12": [true, true], "13": [true, true], "14": [true, true], "15": [true, true], "16": [true, true], "17": [true, true], "18": [true, true], "19": [true, true], "20": [true, true], "21": [true, true], "22": [true, true], "23": [true, true], "24": [true, true], "25": [false, false], "26": [true, true], "27": [true, true], "28": [true, true], "29": [false, false], "30": [true, true], "31": [false, false], "32": [false, false], "33": [true, true], "34": [false, false], "35": [true, true], "36": [false, false], "37": [false, false], "38": [false, false], "39": [false, false]};
 
+// ===== Data for the Mouse Graft System =====
+// MOUSE_GEOMETRY: where the body sits inside each 1152x768 separated image.
+// MOUSE_HAS_CABLE: [original, x-ray] whether the mouse has a cable.
+// 39 mice. lane = form family on the lineage map. approx = the year is placed between neighbours because the mouse is not on the source list.
 const LANES = ["Box", "Dome", "Trackball", "Drop", "Ergonomic", "Multi-button", "Flat"];
-
+// Relative real size of each mouse (from the size-comparison sheet): screen px per image px. Never normalised, so a small mouse stays small.
 const REAL_SIZE = {"01":0.2079,"02":0.1591,"03":0.1296,"04":0.1758,"05":0.1756,"06":0.1754,"07":0.1506,"08":0.1507,"09":0.1503,"10":0.1508,"11":0.2097,"12":0.1965,"13":0.1674,"14":0.1766,"15":0.1713,"16":0.1709,"17":0.1704,"18":0.1677,"19":0.1381,"20":0.1388,"21":0.1142,"22":0.1411,"23":0.1483,"24":0.1479,"25":0.1317,"26":0.1482,"27":0.1875,"28":0.1873,"29":0.1459,"30":0.1945,"31":0.1218,"32":0.152,"33":0.1519,"34":0.1551,"35":0.1977,"36":0.149,"37":0.1517,"38":0.1514,"39":0.1524};
 const REAL_K = 0.9;
-const WHEEL = ["20","22","24","25","27","29","30","33","34","35","36","37","38","39"];
-const FREE_WHEEL = ["29","36","37"];
+const WHEEL = ["20","22","24","25","27","29","30","33","34","35","36","37","38","39"];   // mice with a scroll wheel
+const FREE_WHEEL = ["29","36","37"];                                                // wheels that can spin freely (no detent)
 const MICE = {
   "10": { year: 1985, name: "C7", maker: "Logitech", lane: 0, trait: "Three buttons in a row" },
   "11": { year: 1986, name: "ADB Mouse", maker: "Apple", lane: 0, trait: "Coiled cable" },
@@ -49,6 +53,9 @@ const MICE = {
   "09": { year: 1985, name: "Serial Mouse", maker: "Microsoft", lane: 3, trait: "The body begins to round" }
 };
 
+// ===== 26 letters = 26 graft bodies =====
+// origin: what the letter pictured in Phoenician / Greek.  graft: how that meaning moved into a mouse trait.
+// parts: the first mouse gives the body (shell); the others give the inner machine (structure).
 const LETTERS = {
   A: { origin: "Aleph, ox head", graft: "Two forked buttons rise like horns",
     parts: [{ m: "04", layer: "both" }, { m: "03", layer: "body" }] },
@@ -102,33 +109,4 @@ const LETTERS = {
     parts: [{ m: "15", layer: "body" }, { m: "03", layer: "cable" }] },
   Z: { origin: "Zayin, weapon", graft: "Many buttons attach like weapons to a lightened body",
     parts: [{ m: "39", layer: "body" }, { m: "30", layer: "body" }, { m: "34", layer: "body" }] }
-};
-
-const LETTERS_KO = {
-  A: ["알레프, 소머리", "갈라진 두 버튼이 뿔처럼 솟는다"],
-  B: ["베트, 집", "상자 몸체 위에 또 하나의 상자 몸체가 쌓인다"],
-  C: ["기멜, 낙타 또는 던지는 막대", "몸체가 활처럼 휜다"],
-  D: ["달레트, 문", "네모난 틀 안에서 투명한 몸체가 열린다"],
-  E: ["헤, 두 팔을 든 사람", "세워 쥐는 몸체에 엄지 받침이 접목된다"],
-  F: ["와우, 갈고리", "서로 다른 시대의 선들이 한 몸체에 매달린다"],
-  G: ["C에 획을 더한 글자", "휜 몸체에 엄지 휠이 더해진다"],
-  H: ["헤트, 울타리", "버튼 줄이 몸체를 둘러싼다"],
-  I: ["요드, 손과 팔", "손 모양으로 깎은 몸체에 손바닥이 겹친다"],
-  J: ["I에서 꼬리가 갈라져 나온 글자", "선을 잃었던 몸체에 선이 돌아온다"],
-  K: ["카프, 손바닥", "손바닥을 받치는 두 몸체가 포개진다"],
-  L: ["라메드, 소 모는 막대", "스크롤 휠이 몸체를 꿰뚫는다"],
-  M: ["멤, 물", "물방울 무늬 표면이 매끈한 수면으로 번진다"],
-  N: ["눈, 뱀 또는 물고기", "뱀의 이름을 가진 두 마우스가 한 몸이 된다"],
-  O: ["아인, 눈", "볼과 광학 센서, 사물의 눈이 한자리에 모인다"],
-  P: ["페, 입", "둥근 입구 아래로 물방울 모양 몸체가 이어진다"],
-  Q: ["코프, 바늘귀", "가장 오래된 선이 둥근 볼 몸체에 꼬리처럼 붙는다"],
-  R: ["레시, 머리", "돔 위에 돔이 얹혀 머리가 된다"],
-  S: ["신, 이", "옆 버튼과 건반이 이처럼 늘어선다"],
-  T: ["타우, 표시", "최초의 몸체에 두 갈래 선과 첫 매킨토시가 표시처럼 새겨진다"],
-  U: ["V에서 갈라져 나온 글자", "선을 완전히 벗어 버린 두 몸체"],
-  V: ["와우, 갈고리", "버튼이 몸체 속으로 흡수된 껍데기"],
-  W: ["V를 겹쳐 만든 글자", "버튼 없는 표면이 두 번 접힌다"],
-  X: ["키, 십자", "두 트랙볼 몸체와 두 선이 엇갈린다"],
-  Y: ["입실론, 갈퀴", "선이 둘로 갈라져 뿌리처럼 퍼진다"],
-  Z: ["자인, 무기", "가벼워진 몸체에 많은 버튼이 무기처럼 붙는다"]
 };

@@ -2,8 +2,8 @@
   --ink: #2b2b2b;
   --soft: rgba(0, 0, 0, 0.45);
   --faint: #888888;
-  --shell: #8a5a2b;
-  --structure: #2f7d4f;
+  --shell: #8a5a2b;      /* brown: the body (shell) */
+  --structure: #2f7d4f;  /* green: the inner machine (structure) */
   --mono: "Courier New", monospace;
 }
 
@@ -17,6 +17,7 @@ html, body {
   font-family: var(--mono);
 }
 
+/* ===== Fixed field: nothing in it ever moves ===== */
 #render-stage { position: fixed; inset: 0; background: #ffffff; overflow: hidden; }
 #ruler { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
 #ruler text { font-family: var(--mono); font-size: 9px; fill: #888; }
@@ -40,9 +41,9 @@ body.xray .og, body:not(.xray) .xg { display: none; }
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: none;
-  mix-blend-mode: multiply;
+  mix-blend-mode: multiply;   /* letters that join are multiplied into one another */
 }
-
+/* original = the same separated images in grey; X-ray = brown body with the green and blue machine as it is */
 body:not(.xray) .og .part img { filter: grayscale(1) contrast(1.12); }
 
 #focus-frame {
@@ -53,6 +54,7 @@ body:not(.xray) .og .part img { filter: grayscale(1) contrast(1.12); }
   z-index: 5000;
 }
 
+/* ===== Label (information lives only at the top) ===== */
 #label {
   position: fixed;
   top: 16px;
@@ -63,7 +65,7 @@ body:not(.xray) .og .part img { filter: grayscale(1) contrast(1.12); }
   z-index: 900;
   pointer-events: none;
   font-family: var(--mono);
-  text-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 9px #fff;
+  text-shadow: 0 0 5px #fff, 0 0 5px #fff, 0 0 9px #fff;   /* stays legible over the big mice */
 }
 #label .l1 { font-size: 14px; color: #111; display: flex; align-items: center; justify-content: center; gap: 9px; flex-wrap: wrap; }
 #label .chip { border: 1px solid var(--shell); color: var(--shell); border-radius: 999px; padding: 1px 10px; font-size: 12px; }
@@ -78,6 +80,7 @@ body:not(.xray) .og .part img { filter: grayscale(1) contrast(1.12); }
 
 #loading { position: fixed; left: 24px; bottom: 22px; font-size: 10px; color: #999; z-index: 900; pointer-events: none; letter-spacing: 0.5px; }
 
+/* ===== Typed display ===== */
 #typed {
   position: fixed;
   bottom: 20px;
@@ -94,6 +97,7 @@ body:not(.xray) .og .part img { filter: grayscale(1) contrast(1.12); }
   width: 250px; text-align: center; font-family: var(--mono); letter-spacing: 1px;
 }
 
+/* ===== Tool buttons ===== */
 #tools { position: fixed; top: 20px; right: 22px; z-index: 1300; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 #tools button {
   display: flex; align-items: center; gap: 6px;
@@ -102,16 +106,12 @@ body:not(.xray) .og .part img { filter: grayscale(1) contrast(1.12); }
   border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 999px; padding: 7px 13px; cursor: pointer; font-family: inherit;
 }
 #xray-toggle { padding-left: 10px !important; }
-#lang-toggle { min-width: 40px; justify-content: center; }
-html[lang="ko"] #tools button,
-html[lang="ko"] #label,
-html[lang="ko"] .panel,
-html[lang="ko"] .key-hide { font-family: "Courier New", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", monospace; }
 #tools button:hover { color: #444; }
 .xray-dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; }
 #tools button[aria-pressed="true"] { color: #eee; background: rgba(30, 30, 30, 0.85); border-color: rgba(0, 0, 0, 0.6); }
 #xray-toggle[aria-pressed="true"] .xray-dot { background: #d8d6cf; }
 
+/* ===== Panels ===== */
 .panel {
   position: fixed; left: 50%; top: 108px; transform: translateX(-50%);
   width: min(430px, 92vw); max-height: calc(100vh - 190px); overflow: auto; box-sizing: border-box;
@@ -147,6 +147,7 @@ html[lang="ko"] .key-hide { font-family: "Courier New", "Apple SD Gothic Neo", "
   .panel.wide, .panel { width: calc(100vw - 24px); left: 12px; transform: none; top: 100px; }
 }
 
+/* ===== Printing: the receipt only, 80 mm ===== */
 @page { size: 80mm auto; margin: 4mm; }
 @media print {
   body > *:not(#panel-receipt) { display: none !important; }
